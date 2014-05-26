@@ -47,10 +47,10 @@ __device__ block_t gpu_spartfun(block_t block, int element, const char* sarray);
 
 __device__ block_t gpu_sfun(block_t block)
 {
-	block_t outBlock = 0;
+	block_t outBlock = 0, part;
 	for (int i = 0; i < 8; i++)
 	{
-		block_t part = (gpu_spartfun(block, i, gpu_sbl[i]) << (i * 4));
+		part = (gpu_spartfun(block, i, gpu_sbl[i]) << (i * 4));
 		outBlock = outBlock | part;
 	}
 	return outBlock;

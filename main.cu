@@ -15,6 +15,9 @@ int main(int argc, char** argv)
 	block_t key;
 	block_t msg[MSG_LEN];
 	block_t cracked_key;
+	int i;
+	clock_t started, finished;
+	int millis, sec, min, h;
 	
 	memset(msg, 0, sizeof(msg));
 	text_to_block("bcc", msg);
@@ -22,20 +25,18 @@ int main(int argc, char** argv)
 
 	printf("Key: %016llx\n", key);
 	des_encrypt(msg, MSG_LEN, key);
-	for (int i = 0; i < MSG_LEN; i++)
+	for (i = 0; i < MSG_LEN; i++)
 		printf("%016llx ", msg[i]);
 	printf("\n");
-	
-	clock_t started, finished;
 
 	started = clock();
 	cracked_key = gpu_des_crack(msg[0]);
 	finished = clock();
 	printf("\nCracked key: %016llx \n", cracked_key);
-	int millis = ((finished - started) * 1000) / CLOCKS_PER_SEC;
-	int sec = millis / 1000;
-	int min = sec / 60;
-	int h = min / 60;
+	millis = ((finished - started) * 1000) / CLOCKS_PER_SEC;
+	sec = millis / 1000;
+	min = sec / 60;
+	h = min / 60;
 	printf("Calculations time: %02d:%02d:%02d:%03d\n", h, min%60, sec%60, millis%1000);
 
 	system("pause");

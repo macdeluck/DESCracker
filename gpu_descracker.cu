@@ -78,6 +78,7 @@ block_t gpu_des_crack(block_t msg)
 	char mess[9];
 	block_t keys[BLOCKSIZE];
 	int valid[BLOCKSIZE];
+	int i;
 	
 	cudaStatus = cudaSetDevice(0);
     if (cudaStatus != cudaSuccess) {
@@ -150,7 +151,7 @@ block_t gpu_des_crack(block_t msg)
         goto Error;
     }
 
-	for(int i=0; i<BLOCKSIZE; i++)
+	for(i=0; i<BLOCKSIZE; i++)
 		printf("%d, %016llx\n", valid[i], keys[i]);
 
 Error:

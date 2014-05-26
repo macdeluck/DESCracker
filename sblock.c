@@ -75,10 +75,11 @@ block_t spartfun(block_t block, int element, const char* sarray);
 
 block_t sfun(block_t block)
 {
-	block_t outBlock = 0;
-	for (int i = 0; i < 8; i++)
+	block_t outBlock = 0, part;
+	int i;
+	for (i = 0; i < 8; i++)
 	{
-		block_t part = (spartfun(block, i, sbl[i]) << (i * 4));
+		part = (spartfun(block, i, sbl[i]) << (i * 4));
 		outBlock = outBlock | part;
 	}
 	return outBlock;

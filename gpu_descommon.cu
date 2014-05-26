@@ -101,11 +101,12 @@ __device__ block_t gpu_permute_key(block_t m, const char* pctable)
 {
 	uint64_t outblock = 0;
 	int shift = 0;
-	for (uint64_t j = 0; j < 64; j++)
+	uint64_t j, b;
+	for (j = 0; j < 64; j++)
 	{
 		if (j % 8 != 7)
 		{
-			uint64_t b = (m >> (pctable[j - shift] - 1)) & 1; // -1 because we number from 0
+			b = (m >> (pctable[j - shift] - 1)) & 1; // -1 because we number from 0
 			GPUSETBYTE(&outblock, 0, j - shift, b);
 		}
 		else shift++;
@@ -143,12 +144,13 @@ __device__ block_t gpu_shift_rigth_key_part(block_t k, int num)
 __device__ void gpu_generate_keys(block_t key, block_t* k)
 {
 	block_t c[17], d[17];
+	int i;
 
 	key = gpu_permute_key(key, gpu_pc1);
 
 	c[0] = gpu_get_first_message_part(key);
 	d[0] = gpu_get_second_key_part(key);
-	for (int i = 1; i < 17; i++)
+	for (i = 1; i < 17; i++)
 	{
 		c[i] = gpu_shift_rigth_key_part(c[i - 1], gpu_key_shift_table[i - 1]);
 		d[i] = gpu_shift_rigth_key_part(d[i - 1], gpu_key_shift_table[i - 1]);
@@ -161,9 +163,10 @@ __device__ void gpu_generate_keys(block_t key, block_t* k)
 __device__ block_t gpu_permute_message_block(block_t m, const char* pctable, int len)
 {
 	uint64_t outblock = 0;
-	for (uint64_t j = 0; j < len; j++)
+	uint64_t j, b;
+	for (j = 0; j < len; j++)
 	{
-		uint64_t b = (m >> (pctable[j] - 1)) & 1; // -1 because we number from 0
+		b = (m >> (pctable[j] - 1)) & 1; // -1 because we number from 0
 		GPUSETBYTE(&outblock, 0, j, b);
 	}
 	return outblock;
@@ -171,7 +174,8 @@ __device__ block_t gpu_permute_message_block(block_t m, const char* pctable, int
 
 __device__ void gpu_permute_message(block_t* m, int count, const char* pctable)
 {
-	for (int i = 0; i < count; i++)
+	int i;
+	for (i = 0; i < count; i++)
 	{
 		m[i] = gpu_permute_message_block(m[i], pctable);
 	}
@@ -190,10 +194,11 @@ __device__ block_t gpu_ffunpart(block_t key, block_t r)
 __device__ block_t gpu_ffun(block_t msg, block_t* k)
 {
 	block_t l[18], r[18];
+	int i;
 	msg = gpu_permute_message_block(msg, gpu_ip);
 	l[0] = gpu_get_first_message_part(msg);
 	r[0] = gpu_get_second_message_part(msg);
-	for (int i = 0; i < 17; i++)
+	for (i = 0; i < 17; i++)
 	{
 		r[i+1] = l[i] ^ gpu_ffunpart(k[i + 1], r[i]);
 		l[i + 1] = r[i];
@@ -211,40 +216,42 @@ __constant__ uint8_t gpu_lookup[16] =
 	0x3, 0xB, 0x7, 0xF 
 };
 
-__device__ uint8_t gpu_flip(uint8_t n)
+__device__ uint8_t gpu_flip8(uint8_t n)
 {
 	return (gpu_lookup[n & 0x0F] << 4) | gpu_lookup[n >> 4];
 }
 
-__device__ uint16_t gpu_flip(uint16_t n)
+__device__ uint16_t gpu_flip16(uint16_t n)
 {
-	return gpu_flip((uint8_t)((n >> 8) & 0xff)) | (gpu_flip((uint8_t)(n & 0xff))<<8);
+	return gpu_flip8((uint8_t)((n >> 8) & 0xff)) | (gpu_flip8((uint8_t)(n & 0xff))<<8);
 }
 
-__device__ uint32_t gpu_flip(uint32_t n)
+__device__ uint32_t gpu_flip32(uint32_t n)
 {
-	return gpu_flip((uint16_t)((n >> 16) & 0xffff)) | (gpu_flip((uint16_t)(n & 0xffff)) << 16);
+	return gpu_flip16((uint16_t)((n >> 16) & 0xffff)) | (gpu_flip16((uint16_t)(n & 0xffff)) << 16);
 }
 
-__device__ uint64_t gpu_flip(uint64_t n)
+__device__ uint64_t gpu_flip64(uint64_t n)
 {
-	return gpu_flip((uint32_t)((n >> 32) & 0xffffffff)) | (((uint64_t)gpu_flip((uint32_t)(n & 0xffffffff))) << 32);
+	return gpu_flip32((uint32_t)((n >> 32) & 0xffffffff)) | (((uint64_t)gpu_flip32((uint32_t)(n & 0xffffffff))) << 32);
 }
 
 __device__ void gpu_flip(block_t* message, int length)
 {
-	for (int i = 0; i < length; i++)
-		message[i] = gpu_flip(message[i]);
+	int i;
+	for (i = 0; i < length; i++)
+		message[i] = gpu_flip64(message[i]);
 }
 
 __device__ void gpu_des_encrypt(block_t* msg, int len, block_t key)
 {
 	block_t k[17];
+	int i;
 	gpu_flip(msg, len);
 	key = gpu_flip(key);
 
 	gpu_generate_keys(key, k);
-	for (int i = 0; i < len; i++)
+	for (i = 0; i < len; i++)
 		msg[i] = gpu_ffun(msg[i], k);
 
 	gpu_flip(msg, len);
@@ -254,10 +261,11 @@ __device__ void gpu_text_to_block(const char* message, block_t* output)
 {
 	int length = gpu_strlen(message);
 	int cnt = length / 8 + ((length % 8) != 0);
-	for (int i = 0; i < cnt; i ++)
+	int i, j;
+	for (i = 0; i < cnt; i ++)
 	{
 		output[i] = 0;
-		for (int j = 0; (j < 8) && i*8+j<length; j++)
+		for (j = 0; (j < 8) && i*8+j<length; j++)
 		{
 			((char*)output)[i * 8 + 7 - j] = message[j + i * 8];
 		}

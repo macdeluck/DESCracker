@@ -93,12 +93,13 @@ block_t ffunpart(block_t key, block_t r);
 block_t permute_key(block_t m, const char* pctable)
 {
 	uint64_t outblock = 0;
+	uint64_t j, b;
 	int shift = 0;
-	for (uint64_t j = 0; j < 64; j++)
+	for (j = 0; j < 64; j++)
 	{
 		if (j % 8 != 7)
 		{
-			uint64_t b = (m >> (pctable[j - shift] - 1)) & 1; // -1 because we number from 0
+			b = (m >> (pctable[j - shift] - 1)) & 1; // -1 because we number from 0
 			SETBYTE(&outblock, 0, j - shift, b);
 		}
 		else shift++;
@@ -108,8 +109,9 @@ block_t permute_key(block_t m, const char* pctable)
 
 void write_block_bytes(block_t m)
 {
+	int i;
 	// byte 0 is the least significant
-	for (int i = 0; i < 64; i++)
+	for (i = 0; i < 64; i++)
 	{
 		if (!(i % 16))
 			printf("\n");
@@ -150,12 +152,13 @@ block_t shift_rigth_key_part(block_t k, int num)
 void generate_keys(block_t key, block_t* k)
 {
 	block_t c[17], d[17];
+	int i;
 
 	key = permute_key(key, pc1);
 
 	c[0] = get_first_key_part(key);
 	d[0] = get_second_key_part(key);
-	for (int i = 1; i < 17; i++)
+	for (i = 1; i < 17; i++)
 	{
 		c[i] = shift_rigth_key_part(c[i - 1], key_shift_table[i - 1]);
 		d[i] = shift_rigth_key_part(d[i - 1], key_shift_table[i - 1]);
@@ -168,9 +171,10 @@ void generate_keys(block_t key, block_t* k)
 block_t permute_message_block(block_t m, const char* pctable, int len)
 {
 	uint64_t outblock = 0;
-	for (uint64_t j = 0; j < len; j++)
+	uint64_t j, b;
+	for (j = 0; j < len; j++)
 	{
-		uint64_t b = (m >> (pctable[j] - 1)) & 1; // -1 because we number from 0
+		b = (m >> (pctable[j] - 1)) & 1; // -1 because we number from 0
 		SETBYTE(&outblock, 0, j, b);
 	}
 	return outblock;
@@ -197,10 +201,11 @@ block_t ffunpart(block_t key, block_t r)
 block_t ffun(block_t msg, block_t* k)
 {
 	block_t l[18], r[18];
+	int i;
 	msg = permute_message_block(msg, ip);
 	l[0] = get_first_message_part(msg);
 	r[0] = get_second_message_part(msg);
-	for (int i = 0; i < 17; i++)
+	for (i = 0; i < 17; i++)
 	{
 		r[i+1] = l[i] ^ ffunpart(k[i + 1], r[i]);
 		l[i + 1] = r[i];
@@ -240,18 +245,20 @@ uint64_t flip64(uint64_t n)
 
 void flip(block_t* message, int length)
 {
-	for (int i = 0; i < length; i++)
-		message[i] = flip(message[i]);
+	int i;
+	for (i = 0; i < length; i++)
+		message[i] = flip64(message[i]);
 }
 
 void des_encrypt(block_t* msg, int len, block_t key)
 {
 	block_t k[17];
+	int i;
 	flip(msg, len);
 	key = flip(key);
 
 	generate_keys(key, k);
-	for (int i = 0; i < len; i++)
+	for (i = 0; i < len; i++)
 		msg[i] = ffun(msg[i], k);
 
 	flip(msg, len);
@@ -259,12 +266,13 @@ void des_encrypt(block_t* msg, int len, block_t key)
 
 void text_to_block(const char* message, block_t* output)
 {
+	int i, j;
 	int length = strlen(message);
 	int cnt = length / 8 + ((length % 8) != 0);
-	for (int i = 0; i < cnt; i ++)
+	for (i = 0; i < cnt; i ++)
 	{
 		output[i] = 0;
-		for (int j = 0; (j < 8) && i*8+j<length; j++)
+		for (j = 0; (j < 8) && i*8+j<length; j++)
 		{
 			((char*)output)[i * 8 + 7 - j] = message[j + i * 8];
 		}
