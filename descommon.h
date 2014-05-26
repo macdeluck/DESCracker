@@ -1,7 +1,7 @@
 #ifndef DESCOMMON
 #define DESCOMMON
 
-#include <cstdint>
+#include <stdint.h>
 
 typedef uint64_t block_t;
 

@@ -1,7 +1,7 @@
 #include "gpu_descommon.cuh"
 #include "gpu_sblocks.cuh"
-#include <cstdio>
-#include <cstring>
+#include <stdio.h>
+#include <string.h>
 
 __constant__ char gpu_pc1[] = //first key permutation
 {

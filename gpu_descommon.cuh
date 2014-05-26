@@ -2,7 +2,7 @@
 #define GPUDESCOMMON
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
-#include <cstdint>
+#include <stdint.h>
 
 typedef uint64_t block_t;
 
