@@ -14,11 +14,11 @@ sblocks.o: sblocks.cpp
 main.o: main.cpp
 	nvcc -c -o main.o main.cpp
 	
-gpu_descommon.o: GPU/gpu_descommon.cpp
-	nvcc -c -o gpu_descommon.o GPU/gpu_descommon.cpp	
+gpu_descommon.o: gpu_descommon.cpp
+	nvcc -c -o gpu_descommon.o gpu_descommon.cpp	
 	
-gpu_descracker.o: GPU/gpu_descracker.cpp
+gpu_descracker.o: gpu_descracker.cpp
 	nvcc -c -o gpu_descracker.o GPU/gpu_descracker.cpp
 	
-gpu_sblocks.o: GPU/gpu_sblocks.cpp
-	nvcc -c -o gpu_sblocks.o GPU/gpu_sblocks.cpp
+gpu_sblocks.o: gpu_sblocks.cpp
+	nvcc -c -o gpu_sblocks.o gpu_sblocks.cpp

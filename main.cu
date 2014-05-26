@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <ctime>
 #include "descracker.h"
-#include "GPU/gpu_descracker.cuh"
+#include "gpu_descracker.cuh"
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 
