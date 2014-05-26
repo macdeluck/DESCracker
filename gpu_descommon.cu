@@ -248,7 +248,7 @@ __device__ void gpu_des_encrypt(block_t* msg, int len, block_t key)
 	block_t k[17];
 	int i;
 	gpu_flip(msg, len);
-	key = gpu_flip(key);
+	key = gpu_flip64(key);
 
 	gpu_generate_keys(key, k);
 	for (i = 0; i < len; i++)

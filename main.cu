@@ -1,8 +1,8 @@
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-#include <cstdint>
-#include <ctime>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdint.h>
+#include <time.h>
 #include "descracker.h"
 #include "gpu_descracker.cuh"
 #include "cuda_runtime.h"
@@ -23,16 +23,16 @@ int main(int argc, char** argv)
 	text_to_block("bcc", msg);
 	text_to_block("bcc", &key);
 
-	printf("Key: %016llx\n", key);
+	printf("Key: %016lx\n", key);
 	des_encrypt(msg, MSG_LEN, key);
 	for (i = 0; i < MSG_LEN; i++)
-		printf("%016llx ", msg[i]);
+		printf("%016lx ", msg[i]);
 	printf("\n");
 
 	started = clock();
 	cracked_key = gpu_des_crack(msg[0]);
 	finished = clock();
-	printf("\nCracked key: %016llx \n", cracked_key);
+	printf("\nCracked key: %016lx \n", cracked_key);
 	millis = ((finished - started) * 1000) / CLOCKS_PER_SEC;
 	sec = millis / 1000;
 	min = sec / 60;

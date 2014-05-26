@@ -82,7 +82,7 @@ const char P[] = //ffun permutation table
 
 block_t get_first_message_part(block_t block);
 block_t get_second_message_part(block_t block);
-block_t permute_message_block(block_t m, const char* pctable, int len=64);
+block_t permute_message_block(block_t m, const char* pctable, int len);
 block_t permute_key(block_t m, const char* pctable);
 block_t get_first_key_part(block_t permutedKey);
 block_t get_second_key_part(block_t permutedKey);
@@ -117,7 +117,7 @@ void write_block_bytes(block_t m)
 			printf("\n");
 		if (!(i % 4))
 			printf("%2d: ", i);
-		printf("%x ", (m >> i) & 1);
+		printf("%lx ", (m >> i) & 1);
 	}
 	printf("\n");
 }
@@ -182,16 +182,17 @@ block_t permute_message_block(block_t m, const char* pctable, int len)
 
 void permute_message(block_t* m, int count, const char* pctable)
 {
-	for (int i = 0; i < count; i++)
+	int i;
+	for (i = 0; i < count; i++)
 	{
-		m[i] = permute_message_block(m[i], pctable);
+		m[i] = permute_message_block(m[i], pctable, 64);
 	}
 }
 
 block_t ffunpart(block_t key, block_t r)
 {
 	block_t ret;
-	ret = permute_message_block(r, st);
+	ret = permute_message_block(r, st, 64);
 	ret = key ^ (ret);
 	ret = sfun(ret);
 	ret = permute_message_block(ret, P, 32);
@@ -202,7 +203,7 @@ block_t ffun(block_t msg, block_t* k)
 {
 	block_t l[18], r[18];
 	int i;
-	msg = permute_message_block(msg, ip);
+	msg = permute_message_block(msg, ip, 64);
 	l[0] = get_first_message_part(msg);
 	r[0] = get_second_message_part(msg);
 	for (i = 0; i < 17; i++)
@@ -211,7 +212,7 @@ block_t ffun(block_t msg, block_t* k)
 		l[i + 1] = r[i];
 	}
 	msg = r[16] | (l[16] << 32);
-	msg = permute_message_block(msg, ipr);
+	msg = permute_message_block(msg, ipr, 64);
 	return msg;
 }
 
@@ -255,7 +256,7 @@ void des_encrypt(block_t* msg, int len, block_t key)
 	block_t k[17];
 	int i;
 	flip(msg, len);
-	key = flip(key);
+	key = flip64(key);
 
 	generate_keys(key, k);
 	for (i = 0; i < len; i++)

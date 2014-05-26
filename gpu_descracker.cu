@@ -52,7 +52,7 @@ __global__ void gpu_des_crack_kernel(block_t* msg, block_t* lastWord, int keyshi
 {
 	int keynum = blockDim.x*blockIdx.x + threadIdx.x;
 	int val = 0;
-	block_t tmpmsg, tmpkey, wordnum, encmsg; 
+	/*block_t tmpmsg, tmpkey, wordnum, encmsg;*/ 
 	gpu_word_for(keynum, &keys[keynum], 4);
 	/*tmpmsg = 0;
 	wordnum = 0;
@@ -72,7 +72,7 @@ block_t gpu_des_crack(block_t msg)
 {
     cudaError_t cudaStatus;
 	block_t lastWord;
-	int alphabets = sizeof(gpu_alphabet);
+	/*int alphabets = sizeof(gpu_alphabet);*/
 	int *dev_valid;
 	block_t *dev_keys, *dev_message, *dev_lastWord;
 	char mess[9];
@@ -152,7 +152,7 @@ block_t gpu_des_crack(block_t msg)
     }
 
 	for(i=0; i<BLOCKSIZE; i++)
-		printf("%d, %016llx\n", valid[i], keys[i]);
+		printf("%d, %016lx\n", valid[i], keys[i]);
 
 Error:
 	cudaFree(dev_keys);

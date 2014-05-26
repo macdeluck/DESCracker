@@ -1,7 +1,7 @@
 OUTPUT=DESCracker
 CFLAGS=
 compile: gpu_descommon.o gpu_descracker.o gpu_sblocks.o descommon.o descracker.o sblocks.o main.o
-	nvcc -o ${OUTPUT} descommon.o descracker.o sblocks.o main.o
+	nvcc -o ${OUTPUT} descommon.o gpu_descommon.o gpu_descracker.o gpu_sblocks.o descracker.o sblocks.o main.o
 
 descommon.o: descommon.c
 	nvcc -c ${CFLAGS} -o descommon.o descommon.c
@@ -23,3 +23,5 @@ gpu_descracker.o: gpu_descracker.cu
 	
 gpu_sblocks.o: gpu_sblocks.cu
 	nvcc -c ${CFLAGS} -o gpu_sblocks.o gpu_sblocks.cu
+clean:
+	rm *.o ${OUTPUT}

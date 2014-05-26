@@ -63,7 +63,7 @@ block_t des_crack(block_t msg)
 	{
 		memset(mess, 0, 8);
 		word_for(keynum++, &tmpkey, alphabets);
-		printf("Checking key: %016llx\n", tmpkey);
+		printf("Checking key: %016lx\n", tmpkey);
 		
 		tmpmsg = 0;
 		wordnum = 0;
