@@ -2,7 +2,7 @@
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 
-__device__ char gpu_sbl[][] = 
+__constant__ char gpu_sbl[][] = 
 { 
 	{14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7,
 	0, 15, 7, 4, 14, 2, 13, 1, 10, 6, 12, 11, 9, 5, 3, 8,
@@ -38,7 +38,7 @@ __device__ char gpu_sbl[][] =
 	2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11} 
 };
 
-__device__ char gpu_ex[] = 
+__constant__ char gpu_ex[] = 
 {
 	0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15
 };

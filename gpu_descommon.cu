@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-__device__ char gpu_pc1[] = //first key permutation
+__constant__ char gpu_pc1[] = //first key permutation
 {
 	57, 49, 41, 33, 25, 17, 9,
 	1, 58, 50, 42, 34, 26, 18,
@@ -15,7 +15,7 @@ __device__ char gpu_pc1[] = //first key permutation
 	21, 13, 5, 28, 20, 12, 4
 };
 
-__device__ char gpu_pc2[] = //second key premutation
+__constant__ char gpu_pc2[] = //second key premutation
 {
 	14, 17, 11, 24, 1, 5,
 	3, 28, 15, 6, 21, 10,
@@ -27,12 +27,12 @@ __device__ char gpu_pc2[] = //second key premutation
 	46, 42, 50, 36, 29, 32
 };
 
-__device__ char gpu_key_shift_table[] =
+__constant__ char gpu_key_shift_table[] =
 {
 	1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1
 };
 
-__device__ char gpu_ip[] = //initial permutation
+__constant__ char gpu_ip[] = //initial permutation
 {
 	58, 50, 42, 34, 26, 18, 10, 2,
 	60, 52, 44, 36, 28, 20, 12, 4,
@@ -44,7 +44,7 @@ __device__ char gpu_ip[] = //initial permutation
 	63, 55, 47, 39, 31, 23, 15, 7
 };
 
-__device__ char gpu_ipr[] = //final permutation
+__constant__ char gpu_ipr[] = //final permutation
 {
 	40,     8,   48,    16,    56,   24,    64,   32,
 	39,     7,   47,    15,    55,   23,    63,   31,
@@ -56,7 +56,7 @@ __device__ char gpu_ipr[] = //final permutation
 	33,     1,   41,     9,    49,   17,    57,   25
 };
 
-__device__ char gpu_st[] = //selection table
+__constant__ char gpu_st[] = //selection table
 {
 	32, 1, 2, 3, 4, 5,
 	4, 5, 6, 7, 8, 9,
@@ -68,7 +68,7 @@ __device__ char gpu_st[] = //selection table
 	28, 29, 30, 31, 32, 1
 };
 
-__device__ char gpu_P[] = //ffun permutation table
+__constant__ char gpu_P[] = //ffun permutation table
 {
 	16,   7,  20,  21,
 	29,  12,  28,  17,
@@ -203,7 +203,7 @@ __device__ block_t gpu_ffun(block_t msg, block_t* k)
 	return msg;
 }
 
-__device__ uint8_t gpu_lookup[16] = 
+__constant__ uint8_t gpu_lookup[16] = 
 {
 	0x0, 0x8, 0x4, 0xC,
 	0x2, 0xA, 0x6, 0xE,
