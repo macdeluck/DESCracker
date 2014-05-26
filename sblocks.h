@@ -1,7 +1,7 @@
 #ifndef SBLOCK
 #define SBLOCK
 
-#include <cstdint>
+#include <stdint.h>
 
 typedef uint64_t block_t;
 

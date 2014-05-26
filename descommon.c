@@ -1,7 +1,7 @@
 #include "descommon.h"
 #include "sblocks.h"
-#include <cstdio>
-#include <cstring>
+#include <stdio.h>
+#include <string.h>
 
 const char pc1[] = //first key permutation
 {
@@ -218,24 +218,24 @@ uint8_t lookup[16] =
 	0x3, 0xB, 0x7, 0xF 
 };
 
-uint8_t flip(uint8_t n)
+uint8_t flip8(uint8_t n)
 {
 	return (lookup[n & 0x0F] << 4) | lookup[n >> 4];
 }
 
-uint16_t flip(uint16_t n)
+uint16_t flip16(uint16_t n)
 {
-	return flip((uint8_t)((n >> 8) & 0xff)) | (flip((uint8_t)(n & 0xff))<<8);
+	return flip8((uint8_t)((n >> 8) & 0xff)) | (flip8((uint8_t)(n & 0xff))<<8);
 }
 
-uint32_t flip(uint32_t n)
+uint32_t flip32(uint32_t n)
 {
-	return flip((uint16_t)((n >> 16) & 0xffff)) | (flip((uint16_t)(n & 0xffff)) << 16);
+	return flip16((uint16_t)((n >> 16) & 0xffff)) | (flip16((uint16_t)(n & 0xffff)) << 16);
 }
 
-uint64_t flip(uint64_t n)
+uint64_t flip64(uint64_t n)
 {
-	return flip((uint32_t)((n >> 32) & 0xffffffff)) | (((uint64_t)flip((uint32_t)(n & 0xffffffff))) << 32);
+	return flip32((uint32_t)((n >> 32) & 0xffffffff)) | (((uint64_t)flip32((uint32_t)(n & 0xffffffff))) << 32);
 }
 
 void flip(block_t* message, int length)

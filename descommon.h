@@ -15,10 +15,10 @@ block_t ffun(block_t block, block_t* keys);
 
 void des_encrypt(block_t* msg, int len, block_t key);
 
-uint64_t flip(uint64_t n);
-uint32_t flip(uint32_t n);
-uint16_t flip(uint16_t n);
-uint8_t flip(uint8_t n);
+uint64_t flip64(uint64_t n);
+uint32_t flip32(uint32_t n);
+uint16_t flip16(uint16_t n);
+uint8_t flip8(uint8_t n);
 void flip(block_t* message, int length);
 
 void text_to_block(const char* message, block_t* output);

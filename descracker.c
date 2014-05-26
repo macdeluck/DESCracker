@@ -1,6 +1,6 @@
 #include "descracker.h"
-#include <cstring>
-#include <cstdio>
+#include <string.h>
+#include <stdio.h>
 
 const char alphabet[] = { 0, 'a', 'b', 'c'};
 
