@@ -54,7 +54,7 @@ __global__ void gpu_des_crack_kernel(block_t* msg, block_t* lastWord, int keyshi
 	int val = 0;
 	block_t tmpmsg, tmpkey, wordnum, encmsg; 
 	gpu_word_for(keynum, &keys[keynum], 4);
-	tmpmsg = 0;
+	/*tmpmsg = 0;
 	wordnum = 0;
 	while (tmpmsg != *lastWord)
 	{
@@ -64,7 +64,7 @@ __global__ void gpu_des_crack_kernel(block_t* msg, block_t* lastWord, int keyshi
 		gpu_des_encrypt(&encmsg, 1, tmpkey);
 		if (encmsg == *msg)
 			val = 1;
-	}
+	}*/
 	valid[keynum] = val;
 }
 
