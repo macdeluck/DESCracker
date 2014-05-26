@@ -4,7 +4,7 @@
 
 #define BLOCKSIZE 60
 
-__constant__ char gpu_alphabet[] = { 0, 'a', 'b', 'c'};
+__device__ char gpu_alphabet[] = { 0, 'a', 'b', 'c'};
 
 __device__ void gpu_word_for(int num, block_t* word, int alphabets)
 {
