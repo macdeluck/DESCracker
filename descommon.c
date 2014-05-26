@@ -265,7 +265,7 @@ void des_encrypt(block_t* msg, int len, block_t key)
 	flip(msg, len);
 }
 
-void text_to_block(const char* message, block_t* output)
+void text_to_block(const char* message, unsigned long* output)
 {
 	int i, j;
 	int length = strlen(message);

@@ -1,4 +1,5 @@
 #include "descracker.h"
+#include "descommon.h"
 #include <string.h>
 #include <stdio.h>
 
