@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <time.h>
+#include "descommon.h"
 #include "descracker.h"
 #include "gpu_descracker.cuh"
 #include "cuda_runtime.h"

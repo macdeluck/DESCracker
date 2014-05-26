@@ -1,6 +1,6 @@
 #include "gpu_descracker.cuh"
-#include <cstring>
-#include <cstdio>
+#include <string.h>
+#include <stdio.h>
 
 #define BLOCKSIZE 60
 
